@@ -10,11 +10,21 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'slug','excerpt', 'body'];
+    protected $gaurded = [];
+
+    // Alternate method for solving n+1 problem, also see the Routes\web file. 
+    // Caveate is you are constanly loading relationships even when you don't 
+    // need them. 
+    protected $with = ['category', 'author'];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
 }
