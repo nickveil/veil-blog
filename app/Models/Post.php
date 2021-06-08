@@ -12,10 +12,20 @@ class Post extends Model
 
     protected $gaurded = [];
 
+    protected $with = ['category','author'];
+
+    public function scopeFilter($query, array $filters)
+    {
+        if ($filters['search'] ?? false) {
+            $query
+                ->where('title','like', '%' . request('search') .'%')
+                ->orWhere('body','like', '%' . request('search') .'%');
+        }
+    }
+
     // Alternate method for solving n+1 problem, also see the Routes\web file. 
     // Caveate is you are constanly loading relationships even when you don't 
     // need them. 
-    protected $with = ['category', 'author'];
 
     public function category()
     {
