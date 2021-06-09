@@ -10,21 +10,16 @@ class PostController extends Controller
 {
     public function index()
     {
-        return view('posts', [
-            'posts' => Post::latest()->filter(request(['search']))->get(),
-            'categories' => Category::all() 
-
-
-            // with method solves the n+1 problem
-            // 'posts' => Post::latest()->with('category','author')->get() 
-    
-            // Alternate method for solving n+1 problem, also see the App\Models\Post file
+        return view('posts.index', [
+            'posts' => Post::latest()->filter(
+                request(['search', 'category','author'])
+            )->simplePaginate(6)->withQueryString()
         ]);
     }
 
     public function show(Post $post)
     {
-        return view('post', [
+        return view('posts.show', [
             'post'=> $post
         ]);
     }
